@@ -1,5 +1,6 @@
 package com.springboot.blog.service.impl;
 import com.springboot.blog.entity.PostResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import com.springboot.blog.entity.Post;
 import com.springboot.blog.exception.ResourceNotFoundException;
@@ -19,8 +20,11 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private PostRepository postRepository;
-    public PostServiceImpl(PostRepository postRepository)
+    public ModelMapper mapper;
+
+    public PostServiceImpl(PostRepository postRepository,ModelMapper mapper)
     {
+        this.mapper=mapper;
         this.postRepository=postRepository;
     }
     @Override
@@ -78,20 +82,21 @@ public class PostServiceImpl implements PostService {
 
     private Post PostDtoToPost(PostDto postDto)
     {
-        Post post=new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+        Post post=mapper.map(postDto,Post.class);
+//        post.setTitle(postDto.getTitle());
+//        post.setDescription(postDto.getDescription());
+//        post.setContent(postDto.getContent());
         return post;
     }
 
     private PostDto PostToPostDto(Post post)
     {
-        PostDto postDto = new PostDto();
-        postDto.setTitle(post.getTitle());
-        postDto.setContent(post.getContent());
-        postDto.setDescription(post.getDescription());
-        postDto.setId(post.getId());
+        PostDto postDto = mapper.map(post, PostDto.class);
+
+//        postDto.setTitle(post.getTitle());
+//        postDto.setContent(post.getContent());
+//        postDto.setDescription(post.getDescription());
+//        postDto.setId(post.getId());
         return postDto;
     }
 }
